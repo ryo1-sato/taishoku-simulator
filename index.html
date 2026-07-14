@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>退職シミュレーター｜失業手当・住民税・国保をまとめて計算【2026年版】</title>
+<meta name="description" content="退職したら失業手当はいくら・いつから・何日分もらえる？住民税と国民健康保険の請求額は？貯金は何ヶ月もつ？7つの質問に答えるだけで、退職後のお金の全体像を無料でシミュレーションできます。2026年最新の制度に対応。">
+<meta property="og:title" content="退職シミュレーター｜退職後のお金を1分で見える化">
+<meta property="og:description" content="失業手当・住民税・国保・年金・貯金の推移をまとめて無料シミュレーション。2026年最新制度対応。">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "失業手当（基本手当）はいつからもらえますか？",
+      "acceptedAnswer": {"@type": "Answer", "text": "会社都合退職の場合は7日間の待期期間のみで支給が始まり、初回の振込は退職から約1ヶ月〜1ヶ月半後です。自己都合退職の場合は待期7日に加えて1ヶ月の給付制限があり（2025年4月以降の離職から2ヶ月→1ヶ月に短縮）、初回振込は約2ヶ月半後が目安です。なお5年以内に3回以上自己都合退職している場合、給付制限は3ヶ月になります。"}
+    },
+    {
+      "@type": "Question",
+      "name": "失業手当はいくらもらえますか？",
+      "acceptedAnswer": {"@type": "Answer", "text": "退職前6ヶ月の給与総額（賞与除く）÷180で「賃金日額」を出し、そこに50〜80%の給付率をかけた「基本手当日額」が1日あたりの支給額です。給与が低い人ほど給付率は高くなります。基本手当日額には年齢別の上限（令和7年8月改定：30〜44歳で8,055円など）があります。"}
+    },
+    {
+      "@type": "Question",
+      "name": "自己都合と会社都合では何が違いますか？",
+      "acceptedAnswer": {"@type": "Answer", "text": "大きな違いは3つです。①給付開始時期（会社都合は待期7日のみ、自己都合は+1ヶ月の給付制限）、②給付日数（会社都合は年齢と勤続年数により90〜330日、自己都合は90〜150日）、③国民健康保険料の軽減（会社都合など非自発的失業なら前年所得を30%として計算されるため大幅に安くなる）です。"}
+    },
+    {
+      "@type": "Question",
+      "name": "退職後の住民税はなぜ高く感じるのですか？",
+      "acceptedAnswer": {"@type": "Answer", "text": "住民税は前年の所得に対して課税され、翌年6月から翌々年5月にかけて支払う後払いの仕組みだからです。退職して収入がなくなっても、働いていた時期の所得に対する住民税の請求は続きます。また1〜5月に退職した場合は、5月までの残額が最後の給与から一括徴収されるのが原則です。"}
+    },
+    {
+      "@type": "Question",
+      "name": "このシミュレーターの計算根拠は何ですか？",
+      "acceptedAnswer": {"@type": "Answer", "text": "雇用保険の基本手当日額は令和7年8月1日改定の厚生労働省公表値、給付制限は2025年4月施行の改正雇用保険法、国民年金保険料は令和8年度の月額17,920円を使用しています。住民税と国民健康保険料は全国的な平均的料率による概算です（国保は市区町村により大きく異なります）。"}
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --page:#f4f6fa;
+    --surface:#ffffff;
+    --ink:#1b2433;
+    --ink-2:#4a5568;
+    --muted:#8a94a6;
+    --grid:#e5e9f0;
+    --baseline:#c6cedb;
+    --border:rgba(27,36,51,0.08);
+    --navy:#16233a;
+    --accent:#1c5cab;
+    --accent-strong:#174a8c;
+    --accent-soft:#ecf3fc;
+    --accent-line:#cfdff3;
+    --bar:#2a78d6;
+    --good:#0f7b33;
+    --good-soft:#eef7f0;
+    --good-line:#cde5d3;
+    --critical:#c43d3d;
+    --warning-bg:#fdf7e7;
+    --warning-border:#ecdcae;
+    --warning-ink:#6b5310;
+    --shadow-card:0 1px 2px rgba(22,35,58,.05), 0 10px 30px -12px rgba(22,35,58,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI",sans-serif;
+    background:var(--page);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);}
+  .wrap{max-width:780px;margin:0 auto;padding:0 18px;}
+
+  /* ===== ヘッダー ===== */
+  header.site{
+    background:var(--surface);
+    border-bottom:1px solid var(--grid);
+    box-shadow:0 1px 0 rgba(22,35,58,.03);
+    position:relative;
+  }
+  header.site::before{
+    content:"";display:block;height:3px;
+    background:linear-gradient(90deg,var(--accent-strong),var(--bar) 55%,#79aae6);
+  }
+  header.site .wrap{display:flex;align-items:center;gap:12px;padding-top:13px;padding-bottom:13px;}
+  .logo-mark{flex:none;width:36px;height:36px;}
+  .logo-text .logo{font-weight:700;font-size:17.5px;letter-spacing:.02em;color:var(--navy);line-height:1.3;}
+  .logo-text .logo-sub{font-size:11.5px;color:var(--muted);letter-spacing:.02em;}
+
+  /* ===== ヒーロー ===== */
+  .hero-band{
+    background:linear-gradient(180deg,#e7effb 0%, #eff4fb 55%, var(--page) 100%);
+    border-bottom:1px solid rgba(28,92,171,.06);
+  }
+  .hero{padding:44px 0 34px;}
+  .hero h1{
+    font-size:26px;line-height:1.5;letter-spacing:.01em;color:var(--navy);
+    font-weight:700;
+  }
+  .hero h1 .accent-line{color:var(--accent);}
+  .hero p.lead{margin-top:12px;color:var(--ink-2);font-size:14.5px;max-width:640px;}
+  .hero .badges{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;background:var(--surface);color:var(--ink-2);
+    border:1px solid var(--accent-line);
+    border-radius:999px;padding:4.5px 13px;font-weight:600;
+    box-shadow:0 1px 2px rgba(22,35,58,.04);
+  }
+  .badge::before{
+    content:"";flex:none;width:14px;height:14px;border-radius:50%;
+    background:var(--accent) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4 8.5l2.6 2.6L12 5.5" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/10px no-repeat;
+  }
+
+  /* ===== カード ===== */
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:26px 24px;margin:22px 0;
+    box-shadow:var(--shadow-card);
+  }
+  @media(max-width:560px){.card{padding:22px 18px;}}
+  .card h2{
+    font-size:17.5px;margin-bottom:4px;display:flex;align-items:center;gap:10px;
+    color:var(--navy);letter-spacing:.02em;
+  }
+  .card h2 .num{
+    background:linear-gradient(135deg,var(--accent),var(--accent-strong));
+    color:#fff;border-radius:9px;width:28px;height:28px;
+    display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none;
+    box-shadow:0 2px 6px rgba(28,92,171,.3);
+  }
+  .card .sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+
+  /* ===== フォーム ===== */
+  form .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;}
+  @media(max-width:560px){form .grid{grid-template-columns:1fr;}}
+  .field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px;color:var(--ink);}
+  .field .hint{font-weight:400;color:var(--muted);font-size:11.5px;display:block;margin-top:1px;}
+  .field .inputrow{display:flex;align-items:center;gap:8px;}
+  input[type=number],select{
+    width:100%;padding:11px 13px;font-size:16px;border:1.5px solid var(--grid);
+    border-radius:10px;background:#fbfcfe;color:var(--ink);font-family:inherit;
+    transition:border-color .15s, box-shadow .15s, background .15s;
+  }
+  input[type=number]:hover,select:hover{border-color:var(--baseline);}
+  input[type=number]:focus,select:focus{
+    outline:none;border-color:var(--accent);background:#fff;
+    box-shadow:0 0 0 3px rgba(42,120,214,.15);
+  }
+  .unit{font-size:13px;color:var(--ink-2);flex:none;font-weight:600;}
+  .radio-group{display:flex;gap:10px;}
+  .radio-group label{
+    flex:1;border:1.5px solid var(--grid);border-radius:11px;padding:11px 8px;
+    text-align:center;font-size:14px;font-weight:700;cursor:pointer;background:#fbfcfe;
+    display:flex;flex-direction:column;gap:1px;margin:0;color:var(--ink-2);
+    transition:all .15s;position:relative;
+  }
+  .radio-group label small{font-weight:400;font-size:10.5px;color:var(--muted);}
+  .radio-group input{display:none;}
+  .radio-group label.on{
+    border-color:var(--accent);background:var(--accent-soft);color:var(--accent-strong);
+    box-shadow:0 0 0 3px rgba(42,120,214,.12);
+  }
+  .radio-group label.on::after{
+    content:"✓";position:absolute;top:-9px;right:-6px;
+    width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;
+    font-size:12px;line-height:20px;font-weight:700;
+    box-shadow:0 2px 5px rgba(28,92,171,.35);
+  }
+  .btn{
+    display:block;width:100%;margin-top:24px;padding:15px;font-size:16.5px;font-weight:700;
+    background:linear-gradient(180deg,#2a6fc4,var(--accent));color:#fff;border:none;border-radius:12px;cursor:pointer;
+    font-family:inherit;letter-spacing:.06em;
+    box-shadow:0 4px 14px rgba(28,92,171,.32), inset 0 1px 0 rgba(255,255,255,.18);
+    transition:transform .12s, box-shadow .12s, filter .12s;
+  }
+  .btn:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 6px 18px rgba(28,92,171,.38), inset 0 1px 0 rgba(255,255,255,.18);}
+  .btn:active{transform:translateY(0);}
+  .privacy-note{
+    margin-top:12px;font-size:11.5px;color:var(--muted);text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+  }
+  .privacy-note::before{content:"🔒";font-size:11px;}
+
+  /* ===== 結果 ===== */
+  #results{display:none;}
+  .hero-figure{text-align:center;padding:10px 0 6px;}
+  .hero-figure .label{font-size:13.5px;color:var(--ink-2);font-weight:700;letter-spacing:.03em;}
+  .hero-figure .value{
+    font-size:52px;font-weight:700;line-height:1.25;letter-spacing:.01em;color:var(--navy);
+  }
+  .hero-figure .value small{font-size:22px;font-weight:700;}
+  .hero-figure .note{
+    display:inline-block;font-size:13px;margin-top:6px;font-weight:700;
+    border-radius:999px;padding:5px 16px;
+  }
+  .hero-figure .note.ok{color:var(--good);background:var(--good-soft);border:1px solid var(--good-line);}
+  .hero-figure .note.warn{color:var(--critical);background:#fbeeee;border:1px solid #edcece;}
+  .hero-figure .note.mid{color:var(--ink-2);background:#f1f3f7;border:1px solid var(--grid);}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+  .stat{
+    border:1px solid var(--grid);border-left:3px solid var(--accent);
+    border-radius:10px;padding:12px 14px;background:#fbfcfe;
+  }
+  .stat .k{font-size:11.5px;color:var(--muted);font-weight:600;}
+  .stat .v{font-size:20px;font-weight:700;margin-top:2px;color:var(--navy);}
+  .stat .v small{font-size:12px;font-weight:600;color:var(--ink-2);}
+
+  .alert{
+    background:var(--warning-bg);border:1px solid var(--warning-border);
+    border-radius:10px;padding:13px 15px;font-size:13px;margin-top:12px;color:var(--warning-ink);
+  }
+  .alert strong{color:#584307;}
+  .goodnote{
+    background:var(--good-soft);border:1px solid var(--good-line);border-radius:10px;
+    padding:13px 15px;font-size:13px;margin-top:4px;margin-bottom:10px;color:#1d4d28;
+  }
+
+  /* ===== タイムライン ===== */
+  .timeline{margin-top:18px;}
+  .tl-bar{display:flex;border-radius:9px;overflow:hidden;height:40px;border:1px solid var(--grid);box-shadow:inset 0 1px 2px rgba(22,35,58,.04);}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+    white-space:nowrap;overflow:hidden;padding:0 4px;}
+  .tl-seg.wait{background:#edeff3;color:var(--ink-2);}
+  .tl-seg.restrict{background:#f7ecd2;color:var(--warning-ink);}
+  .tl-seg.benefit{background:linear-gradient(180deg,#e3eefb,#d8e7f9);color:var(--accent-strong);}
+  .tl-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
+  .tl-legend{display:none;font-size:11.5px;color:var(--ink-2);margin-top:8px;line-height:1.9;}
+  .tl-legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 4px 0 10px;vertical-align:-1px;}
+  @media(max-width:560px){
+    .tl-seg{font-size:0;}
+    .tl-legend{display:block;}
+  }
+
+  /* ===== 支払いテーブル ===== */
+  table.pay{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
+  table.pay th{text-align:left;font-weight:700;color:var(--ink-2);padding:10px 8px;border-bottom:2px solid var(--grid);font-size:12.5px;letter-spacing:.03em;}
+  table.pay td{padding:11px 8px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;}
+  table.pay td.name{text-align:left;font-weight:600;}
+  table.pay td .memo{display:block;font-size:11px;color:var(--muted);font-weight:400;}
+  table.pay tr:nth-child(even) td{background:#fafbfd;}
+  table.pay tr.total td{font-weight:700;font-size:15px;border-bottom:none;border-top:2px solid var(--baseline);background:var(--accent-soft);color:var(--navy);}
+  table.pay tr.total td:first-child{border-radius:8px 0 0 8px;}
+  table.pay tr.total td:last-child{border-radius:0 8px 8px 0;}
+  table.pay td:not(.name){white-space:nowrap;}
+  @media(max-width:560px){
+    table.pay{font-size:13px;}
+    table.pay td{padding:10px 5px;}
+    table.pay tr.total td{font-size:13.5px;}
+  }
+
+  /* ===== チャート ===== */
+  .chart-box{position:relative;margin-top:16px;}
+  .chart-box svg{width:100%;height:auto;display:block;}
+  .tooltip{
+    position:absolute;pointer-events:none;background:var(--navy);color:#fff;
+    font-size:12px;line-height:1.55;border-radius:8px;padding:8px 11px;
+    opacity:0;transition:opacity .12s;white-space:nowrap;z-index:5;transform:translate(-50%,-100%);
+    box-shadow:0 4px 14px rgba(22,35,58,.3);
+  }
+  .tooltip .t{font-weight:700;}
+  .chart-legend-note{font-size:11.5px;color:var(--muted);margin-top:10px;}
+
+  /* ===== ヒント ===== */
+  .tips li{margin:10px 0;font-size:13.5px;list-style:none;padding-left:30px;position:relative;color:var(--ink-2);}
+  .tips li strong{color:var(--ink);}
+  .tips li::before{
+    content:"✓";position:absolute;left:0;top:2px;
+    width:19px;height:19px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line);
+    font-size:11px;line-height:18px;text-align:center;font-weight:700;
+  }
+
+  /* ===== FAQ ===== */
+  .faq details{border-bottom:1px solid var(--grid);padding:4px 0;}
+  .faq details:last-of-type{border-bottom:none;}
+  .faq summary{
+    cursor:pointer;font-weight:700;font-size:14.5px;padding:12px 0;list-style:none;
+    position:relative;padding-left:30px;padding-right:26px;color:var(--ink);
+  }
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::before{
+    content:"Q";position:absolute;left:0;top:12px;
+    width:21px;height:21px;border-radius:6px;background:var(--accent-soft);color:var(--accent);
+    border:1px solid var(--accent-line);
+    font-size:12px;line-height:20px;text-align:center;font-weight:700;
+  }
+  .faq summary::after{content:"＋";position:absolute;right:2px;color:var(--muted);font-weight:400;}
+  .faq details[open] summary::after{content:"−";}
+  .faq .a{font-size:13.5px;color:var(--ink-2);padding:0 0 16px 30px;}
+
+  details.basis{margin-top:16px;font-size:12.5px;color:var(--ink-2);
+    background:#f7f9fc;border:1px solid var(--grid);border-radius:10px;padding:12px 15px;}
+  details.basis summary{cursor:pointer;font-weight:700;color:var(--ink-2);font-size:12.5px;}
+  details.basis ul{margin:10px 0 4px 18px;}
+  details.basis li{margin:5px 0;}
+
+  /* ===== フッター・免責 ===== */
+  .disclaimer{
+    font-size:12px;color:var(--muted);background:var(--surface);
+    border:1px solid var(--grid);border-radius:12px;padding:14px 16px;margin-top:20px;
+  }
+  footer.site{
+    margin-top:40px;background:var(--navy);
+    padding:30px 0 34px;font-size:12px;color:#9daabd;
+  }
+  footer.site .f-logo{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+  footer.site .f-logo svg{width:26px;height:26px;}
+  footer.site .f-logo b{color:#fff;font-size:14px;letter-spacing:.03em;}
+  footer.site p{margin:4px 0;}
+
+  /* ===== スマホ最適化 ===== */
+  @media(max-width:560px){
+    .hero{padding:32px 0 26px;}
+    .hero h1{font-size:21.5px;}
+    .hero p.lead{font-size:13.5px;}
+    .badge{font-size:11px;padding:4px 11px;}
+    .card h2{font-size:16.5px;}
+    .hero-figure .value{font-size:44px;}
+    .hero-figure .value small{font-size:19px;}
+    .hero-figure .note{font-size:12px;padding:4px 13px;}
+    .stat{padding:10px 11px;}
+    .stat .v{font-size:16.5px;}
+    .stat .v small{font-size:11px;}
+    .btn{font-size:15.5px;}
+  }
+  @media(max-width:374px){
+    .stat-grid{grid-template-columns:1fr;}
+    .logo-text .logo-sub{font-size:10px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="2" y="2" width="36" height="36" rx="9" fill="#1c5cab"/>
+      <path d="M10 27 L16 20 L21 23.5 L30 12.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="30" cy="12.5" r="2.6" fill="#fff"/>
+      <rect x="10" y="30" width="20" height="2.4" rx="1.2" fill="#79aae6"/>
+    </svg>
+    <div class="logo-text">
+      <div class="logo">退職シミュレーター</div>
+      <div class="logo-sub">失業手当・住民税・国保・貯金の推移を1分で見える化</div>
+    </div>
+  </div>
+</header>
+
+<div class="hero-band">
+  <div class="wrap">
+    <section class="hero">
+      <h1>退職したら、お金はどうなる？<br><span class="accent-line">失業手当と請求額</span>をまとめてシミュレーション</h1>
+      <p class="lead">「失業手当はいくら・いつから？」「住民税と国保の請求は？」「貯金は何ヶ月もつ？」——退職前に知っておきたいお金の全体像を、7つの質問に答えるだけで無料で計算します。</p>
+      <div class="badges">
+        <span class="badge">2026年最新制度対応</span>
+        <span class="badge">厚労省の公式計算式を使用</span>
+        <span class="badge">登録不要・無料</span>
+        <span class="badge">入力データは保存されません</span>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="card">
+    <h2><span class="num">1</span>あなたの状況を入力</h2>
+    <p class="sub">すべて概算でOK。あとから何度でも変えられます。</p>
+    <form id="form" onsubmit="return false;">
+      <div class="grid">
+        <div class="field">
+          <label for="age">年齢 <span class="hint">退職時の年齢（18〜64歳）</span></label>
+          <div class="inputrow"><input type="number" id="age" value="35" min="18" max="64"><span class="unit">歳</span></div>
+        </div>
+        <div class="field">
+          <label for="wage">退職前6ヶ月の平均月収 <span class="hint">額面・残業代込み・賞与除く</span></label>
+          <div class="inputrow"><input type="number" id="wage" value="30" min="5" max="200"><span class="unit">万円</span></div>
+        </div>
+        <div class="field">
+          <label for="income">前年の年収 <span class="hint">額面・賞与込み（住民税・国保の計算に使用）</span></label>
+          <div class="inputrow"><input type="number" id="income" value="450" min="50" max="3000"><span class="unit">万円</span></div>
+        </div>
+        <div class="field">
+          <label for="tenure">雇用保険の加入期間 <span class="hint">おおむね勤続年数（転職で通算可）</span></label>
+          <select id="tenure">
+            <option value="0">6ヶ月未満</option>
+            <option value="1">6ヶ月〜1年未満</option>
+            <option value="2">1年〜5年未満</option>
+            <option value="3">5年〜10年未満</option>
+            <option value="4" selected>10年〜20年未満</option>
+            <option value="5">20年以上</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column:1/-1;">
+          <label>退職理由</label>
+          <div class="radio-group" id="reasonGroup">
+            <label class="on"><input type="radio" name="reason" value="self" checked>自己都合<small>転職・一身上の都合など</small></label>
+            <label><input type="radio" name="reason" value="company">会社都合<small>倒産・解雇・雇い止めなど</small></label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="savings">現在の貯金額 <span class="hint">すぐ使える預貯金</span></label>
+          <div class="inputrow"><input type="number" id="savings" value="300" min="0" max="100000"><span class="unit">万円</span></div>
+        </div>
+        <div class="field">
+          <label for="severance">退職金など一時収入 <span class="hint">手取り額・なければ0</span></label>
+          <div class="inputrow"><input type="number" id="severance" value="50" min="0" max="100000"><span class="unit">万円</span></div>
+        </div>
+        <div class="field">
+          <label for="living">毎月の生活費 <span class="hint">家賃・食費など（税・保険料は自動計算）</span></label>
+          <div class="inputrow"><input type="number" id="living" value="22" min="1" max="500"><span class="unit">万円</span></div>
+        </div>
+      </div>
+      <button class="btn" id="calcBtn">結果を見る</button>
+      <p class="privacy-note">入力内容はこのページ内でのみ計算され、サーバーに送信・保存されません。</p>
+    </form>
+  </section>
+
+  <!-- AdSense枠①：審査通過後にここへ広告コードを挿入 -->
+
+  <div id="results">
+
+    <section class="card">
+      <div class="hero-figure">
+        <div class="label">再就職しない場合、いまの貯金がもつ期間</div>
+        <div class="value" id="surviveValue">—</div>
+        <div class="note" id="surviveNote"></div>
+      </div>
+      <div class="chart-box" id="chartBox">
+        <div id="chart"></div>
+        <div class="tooltip" id="tooltip"></div>
+      </div>
+      <p class="chart-legend-note">毎月末の貯金残高の推移（24ヶ月）。<span style="color:var(--critical);font-weight:600;">■赤</span>はマイナス（貯金が尽きた状態）。失業手当の入金と、生活費・税・保険料の支払いを月ごとに反映しています。</p>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">2</span>失業手当（雇用保険の基本手当）</h2>
+      <p class="sub" id="benefitSub"></p>
+      <div id="benefitAlert"></div>
+      <div class="stat-grid" id="benefitStats"></div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">3</span>退職後に請求されるお金（月あたり）</h2>
+      <p class="sub">会社が天引きしてくれていた支払いが、退職後は自分宛てに請求されます。</p>
+      <div id="nhiNote"></div>
+      <table class="pay" id="payTable"></table>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">4</span>負担を減らすためにできること</h2>
+      <ul class="tips" id="tipsList"></ul>
+      <details class="basis">
+        <summary>計算の前提と制度の根拠（2026年7月時点）</summary>
+        <ul>
+          <li>基本手当日額：令和7年8月1日改定の厚生労働省公表値（年齢別上限 29歳以下7,255円／30〜44歳8,055円／45〜59歳8,870円／60〜64歳7,623円、下限2,411円）と公式の給付率計算式を使用。</li>
+          <li>給付制限：2025年4月1日以降の離職から、自己都合退職は原則1ヶ月（5年以内に3回以上の自己都合退職は3ヶ月）。</li>
+          <li>国民年金保険料：令和8年度（2026年4月〜2027年3月）の月額17,920円。</li>
+          <li>住民税：前年所得に税率10%＋均等割・森林環境税で概算（単身の場合）。</li>
+          <li>国民健康保険：全国の平均的な料率による概算（単身の場合）。実際の保険料は市区町村によって大きく異なります。会社都合等の場合は非自発的失業者の軽減（前年給与所得を30%として計算）を適用。</li>
+          <li>シミュレーションは1ヶ月=30日として計算し、失業手当の振込は実際の認定日サイクルを踏まえ約1ヶ月遅れで反映しています。</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- AdSense枠②：審査通過後にここへ広告コードを挿入 -->
+
+  </div>
+
+  <section class="card faq">
+    <h2>よくある質問</h2>
+    <details>
+      <summary>失業手当はいつからもらえますか？</summary>
+      <div class="a">会社都合退職なら7日間の待期期間のみで支給が始まり、初回振込は退職から約1ヶ月〜1ヶ月半後です。自己都合退職は待期7日＋給付制限1ヶ月（2025年4月以降の離職から2ヶ月→1ヶ月に短縮）があり、初回振込は約2ヶ月半後が目安です。5年以内に3回以上自己都合退職していると給付制限は3ヶ月になります。また、離職前1年以内または離職後に教育訓練等を受けると給付制限が解除される制度もあります。</div>
+    </details>
+    <details>
+      <summary>失業手当の金額はどう決まりますか？</summary>
+      <div class="a">退職前6ヶ月の給与総額（賞与除く）÷180で「賃金日額」を計算し、50〜80%の給付率をかけたものが1日あたりの支給額（基本手当日額）です。給与が低かった人ほど給付率は高く設定されています。日額には年齢別の上限があり、令和7年8月改定では30〜44歳で8,055円です。</div>
+    </details>
+    <details>
+      <summary>自己都合と会社都合では何が違いますか？</summary>
+      <div class="a">①給付開始（会社都合は待期7日のみ、自己都合は＋給付制限1ヶ月）、②給付日数（会社都合は90〜330日、自己都合は90〜150日）、③国民健康保険の軽減（会社都合などの非自発的失業なら前年所得を30%として計算）の3点が大きく異なります。同じ給与・勤続でも受け取れる総額が2倍以上変わることがあります。</div>
+    </details>
+    <details>
+      <summary>退職後の住民税が高いのはなぜですか？</summary>
+      <div class="a">住民税は「前年の所得」に課税され、翌年6月〜翌々年5月に支払う後払い方式だからです。退職して収入がゼロになっても、働いていた頃の所得に対する請求は続きます。1〜5月に退職した場合は、5月までの残額が最後の給与や退職金から一括徴収されるのが原則です。</div>
+    </details>
+    <details>
+      <summary>健康保険は「任意継続」と「国保」どちらが得ですか？</summary>
+      <div class="a">在職中の健康保険を最長2年続けられる「任意継続」は、保険料が在職時の約2倍になる一方で上限があるため、収入が高かった人ほど有利になりやすい制度です。逆に会社都合退職なら国保の軽減が受けられるため国保が有利なケースがほとんどです。退職前に、加入していた健保組合と市区町村の窓口で両方の見積もりを取るのが確実です。</div>
+    </details>
+    <details>
+      <summary>計算結果は正確ですか？</summary>
+      <div class="a">失業手当は厚生労働省の公式計算式（令和7年8月改定）を使っているため精度は高めですが、住民税・国民健康保険はお住まいの市区町村や家族構成で変わるため概算です。正確な金額は、ハローワーク・市区町村の窓口・加入中の健康保険組合でご確認ください。</div>
+    </details>
+  </section>
+
+  <div class="disclaimer">
+    <strong>免責事項：</strong>本シミュレーターの結果は2026年7月時点の制度に基づく概算であり、金額を保証するものではありません。実際の支給額・請求額は、ハローワーク、市区町村、年金事務所、健康保険組合等でご確認ください。本ツールの利用により生じた損害について、運営者は責任を負いません。
+  </div>
+
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="f-logo">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="2" y="2" width="36" height="36" rx="9" fill="#2a6fc4"/>
+        <path d="M10 27 L16 20 L21 23.5 L30 12.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="30" cy="12.5" r="2.6" fill="#fff"/>
+        <rect x="10" y="30" width="20" height="2.4" rx="1.2" fill="#9cc0ec"/>
+      </svg>
+      <b>退職シミュレーター</b>
+    </div>
+    <p>退職後のお金の不安を、数字に変える。</p>
+    <p>制度データ：厚生労働省（令和7年8月1日改定 基本手当日額）／日本年金機構（令和8年度 国民年金保険料）ほか</p>
+    <p><a href="./privacy.html" style="color:#c9d5e8;">プライバシーポリシー・免責事項・運営者情報</a></p>
+    <p>最終更新：2026年7月14日</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ===== 制度定数（更新時はここだけ変える） ===== */
+const C = {
+  updated: "2026-07-14",
+  // 令和7年8月1日改定（厚生労働省）
+  wageDailyMin: 3014,
+  benefitDailyMin: 2411,
+  ageBands: [
+    { max: 29, wageCap: 14510, benefitCap: 7255 },
+    { max: 44, wageCap: 16110, benefitCap: 8055 },
+    { max: 59, wageCap: 17740, benefitCap: 8870 },
+    { max: 64, wageCap: 16940, benefitCap: 7623 },
+  ],
+  pensionMonthly: 17920,      // 令和8年度 国民年金保険料
+  residentTaxRate: 0.10,
+  residentTaxFlat: 6000,      // 均等割5,000円＋森林環境税1,000円
+  residentTaxAdj: 2500,       // 調整控除
+  socialInsRate: 0.145,       // 在職時の社会保険料率（控除概算用）
+  nhi: {                      // 国民健康保険（全国平均的な概算モデル・単身）
+    medRate: 0.095,           // 医療分＋支援分の所得割
+    careRate: 0.020,          // 介護分の所得割（40〜64歳）
+    perCapita: 55000,         // 医療分＋支援分の均等割
+    perCapitaCare: 17000,     // 介護分の均等割
+    cap: 1090000,             // 賦課限度額
+  },
+  simMonths: 24,
+};
+
+/* ===== 計算ロジック ===== */
+
+// 基本手当日額（令和7年8月1日改定の公式計算式）
+function basicDaily(wageDaily, age) {
+  const band = C.ageBands.find(b => age <= b.max) || C.ageBands[3];
+  const w = Math.min(Math.max(wageDaily, C.wageDailyMin), band.wageCap);
+  let y;
+  if (age <= 59) {
+    if (w < 5340) y = 0.8 * w;
+    else if (w <= 13140) y = 0.8 * w - 0.3 * ((w - 5340) / 7800) * w;
+    else y = 0.5 * w;
+  } else { // 60〜64歳
+    if (w < 5340) y = 0.8 * w;
+    else if (w <= 11800) y = Math.min(0.8 * w - 0.35 * ((w - 5340) / 6460) * w, 0.05 * w + 4720);
+    else y = 0.45 * w;
+  }
+  return Math.min(Math.max(Math.floor(y), C.benefitDailyMin), band.benefitCap);
+}
+
+// 所定給付日数
+function benefitDays(reason, age, tenureIdx) {
+  if (reason === "self") {
+    // 一般受給資格者：離職前2年に被保険者期間12ヶ月以上が必要
+    if (tenureIdx <= 1) return 0;
+    if (tenureIdx <= 3) return 90;   // 1〜10年
+    if (tenureIdx === 4) return 120; // 10〜20年
+    return 150;                      // 20年〜
+  }
+  // 特定受給資格者（会社都合）：離職前1年に6ヶ月以上
+  if (tenureIdx === 0) return 0;
+  if (tenureIdx === 1) return 90; // 1年未満は全年齢90日
+  const t = {
+    u30:  { 2: 90,  3: 120, 4: 180, 5: 180 },
+    a34:  { 2: 120, 3: 180, 4: 210, 5: 240 },
+    a44:  { 2: 150, 3: 180, 4: 240, 5: 270 },
+    a59:  { 2: 180, 3: 240, 4: 270, 5: 330 },
+    a64:  { 2: 150, 3: 180, 4: 210, 5: 240 },
+  };
+  const row = age < 30 ? t.u30 : age <= 34 ? t.a34 : age <= 44 ? t.a44 : age <= 59 ? t.a59 : t.a64;
+  return row[tenureIdx];
+}
+
+// 給与所得（令和7年改正：最低保障65万円）
+function salaryIncome(gross) {
+  let d;
+  if (gross <= 1900000) d = 650000;
+  else if (gross <= 3600000) d = gross * 0.30 + 80000;
+  else if (gross <= 6600000) d = gross * 0.20 + 440000;
+  else if (gross <= 8500000) d = gross * 0.10 + 1100000;
+  else d = 1950000;
+  return Math.max(0, gross - d);
+}
+
+// 住民税 年額（概算・単身）
+function residentTaxAnnual(grossLastYear) {
+  const gi = salaryIncome(grossLastYear);
+  if (gi <= 450000) return 0; // 非課税の目安（単身）
+  const taxable = Math.max(0, gi - grossLastYear * C.socialInsRate - 430000);
+  return Math.max(0, Math.round(taxable * C.residentTaxRate) - C.residentTaxAdj) + C.residentTaxFlat;
+}
+
+// 国民健康保険 年額（概算・単身）
+function nhiAnnual(grossLastYear, age, reason) {
+  let gi = salaryIncome(grossLastYear);
+  if (reason === "company") gi = gi * 0.30; // 非自発的失業者の軽減
+  const base = Math.max(0, gi - 430000);
+  const care = age >= 40 && age <= 64;
+  let perCapita = C.nhi.perCapita + (care ? C.nhi.perCapitaCare : 0);
+  if (gi <= 430000) perCapita = Math.round(perCapita * 0.3); // 低所得の均等割7割軽減の目安
+  const total = base * C.nhi.medRate + (care ? base * C.nhi.careRate : 0) + perCapita;
+  return Math.min(Math.round(total), C.nhi.cap);
+}
+
+function simulate(p) {
+  const wageDaily = p.wage6m * 6 / 180;
+  const days = benefitDays(p.reason, p.age, p.tenureIdx);
+  const daily = days > 0 ? basicDaily(wageDaily, p.age) : 0;
+  const restrictionDays = p.reason === "self" ? 30 : 0;
+  const accrualStart = 7 + 7 + restrictionDays; // 申請まで約7日＋待期7日＋給付制限
+
+  const resTax = residentTaxAnnual(p.lastYearIncome);
+  const nhi = nhiAnnual(p.lastYearIncome, p.age, p.reason);
+  const resTaxM = Math.round(resTax / 12);
+  const nhiM = Math.round(nhi / 12);
+  const fixedM = C.pensionMonthly + resTaxM + nhiM;
+
+  const rows = [];
+  let bal = p.savings + p.severance;
+  rows.push({ m: 0, bal, benefit: 0, out: 0 });
+  let accrPrev = 0, depleted = null;
+  for (let m = 1; m <= C.simMonths; m++) {
+    const s = Math.max((m - 1) * 30, accrualStart);
+    const e = Math.min(m * 30, accrualStart + days);
+    const accr = Math.max(0, e - s);
+    const pay = Math.round(accrPrev * daily); // 振込は約1ヶ月遅れ
+    accrPrev = accr;
+    const out = p.living + fixedM;
+    bal += pay - out;
+    rows.push({ m, bal, benefit: pay, out });
+    if (depleted === null && bal < 0) depleted = m;
+  }
+
+  const firstPayWeeks = days > 0 ? Math.round((accrualStart + 28) / 7) : null;
+  const lastPayMonth = days > 0 ? Math.ceil((accrualStart + days) / 30) + 1 : null;
+
+  return {
+    wageDaily, daily, days, total: daily * days,
+    restrictionDays, accrualStart, firstPayWeeks, lastPayMonth,
+    resTax, resTaxM, nhi, nhiM, fixedM, rows, depleted,
+  };
+}
+
+/* ===== 表示 ===== */
+const $ = id => document.getElementById(id);
+const yen = n => n.toLocaleString("ja-JP") + "円";
+const man = n => (Math.round(n / 10000)).toLocaleString("ja-JP") + "万円";
+
+function readParams() {
+  return {
+    age: Math.min(64, Math.max(18, +$("age").value || 35)),
+    wage6m: (+$("wage").value || 0) * 10000,
+    lastYearIncome: (+$("income").value || 0) * 10000,
+    tenureIdx: +$("tenure").value,
+    reason: document.querySelector('input[name=reason]:checked').value,
+    savings: (+$("savings").value || 0) * 10000,
+    severance: (+$("severance").value || 0) * 10000,
+    living: (+$("living").value || 0) * 10000,
+  };
+}
+
+function render() {
+  const p = readParams();
+  const r = simulate(p);
+
+  // --- ヒーロー数値 ---
+  const sv = $("surviveValue"), sn = $("surviveNote");
+  if (r.depleted === null) {
+    const last = r.rows[r.rows.length - 1].bal;
+    sv.innerHTML = `${C.simMonths / 12}年以上`;
+    sn.textContent = `✓ ${C.simMonths}ヶ月後も約${man(last)}残る計算です`;
+    sn.className = "note ok";
+  } else {
+    sv.innerHTML = `約${r.depleted}<small>ヶ月</small>`;
+    if (r.depleted <= 6) {
+      sn.textContent = `⚠ ${r.depleted}ヶ月目に貯金がマイナスになります。退職時期の再検討や支出の見直しを`;
+      sn.className = "note warn";
+    } else {
+      sn.textContent = `${r.depleted}ヶ月目に貯金がマイナスになる計算です`;
+      sn.className = "note " + (r.depleted <= 12 ? "warn" : "mid");
+    }
+  }
+
+  // --- 失業手当 ---
+  const bs = $("benefitStats"), ba = $("benefitAlert"), sub = $("benefitSub");
+  if (r.days === 0) {
+    sub.textContent = "";
+    bs.innerHTML = "";
+    $("timeline").innerHTML = "";
+    ba.innerHTML = `<div class="alert"><strong>受給資格を満たしていない可能性があります。</strong> ${
+      p.reason === "self"
+        ? "自己都合退職では、離職前2年間に雇用保険の被保険者期間が通算12ヶ月以上必要です。"
+        : "会社都合退職では、離職前1年間に被保険者期間が通算6ヶ月以上必要です。"
+    }前職と通算できる場合もあるため、ハローワークでご確認ください。以下のシミュレーションは失業手当なしで計算しています。</div>`;
+  } else {
+    sub.textContent = `賃金日額 ${yen(Math.round(r.wageDaily))} ×給付率で計算（令和7年8月改定の公式計算式）`;
+    ba.innerHTML = "";
+    bs.innerHTML = `
+      <div class="stat"><div class="k">1日あたり（基本手当日額）</div><div class="v">${yen(r.daily)}</div></div>
+      <div class="stat"><div class="k">月あたりの目安 <small>（30日分）</small></div><div class="v">${yen(r.daily * 30)}</div></div>
+      <div class="stat"><div class="k">もらえる日数</div><div class="v">${r.days}日分</div></div>
+      <div class="stat"><div class="k">受け取れる総額</div><div class="v">${man(r.total)}</div></div>
+      <div class="stat"><div class="k">初回の振込</div><div class="v">退職から約${r.firstPayWeeks}週間後</div></div>
+      <div class="stat"><div class="k">在職時の月収と比べると</div><div class="v">約${Math.round(r.daily * 30 / p.wage6m * 100)}<small>%</small></div></div>
+    `;
+
+    // タイムライン
+    const totalDays = r.accrualStart + r.days;
+    const pct = d => Math.max(6, Math.round(d / totalDays * 100));
+    let segs = `<div class="tl-seg wait" style="width:${pct(14)}%">申請・待期</div>`;
+    if (r.restrictionDays > 0) segs += `<div class="tl-seg restrict" style="width:${pct(30)}%">給付制限 1ヶ月</div>`;
+    segs += `<div class="tl-seg benefit" style="flex:1">受給期間 ${r.days}日分</div>`;
+    let legend = `<span class="sw" style="background:#edeff3;margin-left:0"></span>申請・待期`;
+    if (r.restrictionDays > 0) legend += `<span class="sw" style="background:#f7ecd2"></span>給付制限 1ヶ月`;
+    legend += `<span class="sw" style="background:#d8e7f9"></span>受給期間 ${r.days}日分`;
+    $("timeline").innerHTML = `
+      <div class="tl-bar">${segs}</div>
+      <div class="tl-labels"><span>退職</span><span>約${Math.round(totalDays / 30)}ヶ月後に受給終了</span></div>
+      <div class="tl-legend">${legend}</div>
+    `;
+  }
+
+  // --- 支払い ---
+  const nhiNote = $("nhiNote");
+  nhiNote.innerHTML = p.reason === "company"
+    ? `<div class="goodnote"><strong>国保の軽減を適用済み：</strong>会社都合などの非自発的失業では、国民健康保険料が前年所得を30%として計算されます（市区町村への届出が必要）。下の金額は軽減後の概算です。</div>`
+    : "";
+  $("payTable").innerHTML = `
+    <tr><th>項目</th><th style="text-align:right">月あたり</th><th style="text-align:right">年あたり</th></tr>
+    <tr><td class="name">住民税<span class="memo">前年の所得に後払いで課税</span></td><td>${yen(r.resTaxM)}</td><td>${yen(r.resTax)}</td></tr>
+    <tr><td class="name">国民健康保険<span class="memo">概算・市区町村で大きく異なる${p.reason === "company" ? "・軽減適用後" : ""}</span></td><td>${yen(r.nhiM)}</td><td>${yen(r.nhi)}</td></tr>
+    <tr><td class="name">国民年金<span class="memo">令和8年度の保険料</span></td><td>${yen(C.pensionMonthly)}</td><td>${yen(C.pensionMonthly * 12)}</td></tr>
+    <tr class="total"><td class="name">税・保険料の合計</td><td>${yen(r.fixedM)}</td><td>${yen(r.resTax + r.nhi + C.pensionMonthly * 12)}</td></tr>
+    <tr class="total"><td class="name">生活費と合わせた毎月の支出</td><td>${yen(r.fixedM + p.living)}</td><td></td></tr>
+  `;
+
+  // --- ヒント ---
+  const tips = [];
+  if (p.reason === "self") {
+    tips.push("<strong>教育訓練を受けると給付制限が解除</strong>されます（離職前1年以内または離職後の受講）。ハローワークで対象講座を確認できます。");
+    tips.push("退職理由が実質的に会社側にある場合（長時間残業・賃金未払い・ハラスメント等）は「特定受給資格者」と認定され、給付日数や国保軽減で大幅に有利になることがあります。");
+  } else {
+    tips.push("<strong>国民健康保険の軽減（前年所得を30%として計算）</strong>は自動では適用されません。雇用保険受給資格者証を持って市区町村の窓口で届出してください。");
+  }
+  tips.push("<strong>国民年金は「退職（失業）による特例免除」</strong>を申請できます。承認されれば支払いを止められ、将来の受給資格期間にも算入されます（年金事務所・市区町村へ）。");
+  tips.push("健康保険は国保のほかに<strong>「任意継続」（在職時の健保を最長2年継続）</strong>という選択肢もあります。前年収入が高い人は任意継続が安いことがあるため、退職前に両方見積もりを。");
+  tips.push("年の途中で退職して再就職しない場合、<strong>確定申告で源泉徴収された所得税が戻ってくる</strong>ことがほとんどです（翌年2〜3月）。");
+  tips.push("1〜5月に退職する場合、<strong>住民税の残額が最後の給与から一括徴収</strong>されるのが原則です。最終月の手取りが大きく減ることがあるため注意してください。");
+  $("tipsList").innerHTML = tips.map(t => `<li>${t}</li>`).join("");
+
+  // --- チャート ---
+  lastResult = r;
+  $("results").style.display = "block";
+  drawChart(r); // display:block後に描画（コンテナ幅を正しく取得するため）
+}
+
+/* 画面回転・リサイズ時はチャートを描き直す */
+let lastResult = null;
+let resizeTimer = null;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (lastResult && $("results").style.display === "block") drawChart(lastResult);
+  }, 150);
+});
+
+/* ===== 貯金残高チャート（SVG・画面幅に応じて描画） ===== */
+function drawChart(r) {
+  const boxW = $("chartBox").clientWidth || 720;
+  const mobile = boxW < 560;
+  const W = mobile ? Math.max(320, Math.round(boxW)) : 720;
+  const H = mobile ? 264 : 300;
+  const padL = mobile ? 48 : 64, padR = mobile ? 18 : 12, padT = 18, padB = mobile ? 30 : 34;
+  const fs = mobile ? 11.5 : 13;          // 軸ラベルの文字サイズ
+  const labelEvery = mobile ? 6 : 3;      // X軸ラベルの間隔（ヶ月）
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const data = r.rows;
+  const n = data.length;
+
+  const maxV = Math.max(...data.map(d => d.bal), 0);
+  const minV = Math.min(...data.map(d => d.bal), 0);
+  // きりのいい目盛り（万円単位）
+  const span = (maxV - minV) || 1;
+  const rawStep = span / 4;
+  const pows = [10000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000];
+  const step = pows.find(s => s >= rawStep) || pows[pows.length - 1];
+  const yMax = Math.ceil(maxV / step) * step;
+  const yMin = Math.min(0, Math.floor(minV / step) * step);
+  const y = v => padT + (yMax - v) / (yMax - yMin || 1) * plotH;
+
+  const slot = plotW / n;
+  const barW = Math.min(24, slot - 2);
+
+  let g = "";
+  // グリッド＋目盛り
+  for (let v = yMin; v <= yMax; v += step) {
+    const yy = y(v);
+    g += `<line x1="${padL}" y1="${yy}" x2="${W - padR}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${padL - 7}" y="${yy + 4.5}" text-anchor="end" font-size="${fs}" fill="var(--muted)" style="font-variant-numeric:tabular-nums">${(v / 10000).toLocaleString()}万</text>`;
+  }
+  // ゼロベースライン
+  g += `<line x1="${padL}" y1="${y(0)}" x2="${W - padR}" y2="${y(0)}" stroke="var(--baseline)" stroke-width="1.5"/>`;
+
+  // 手当終了マーカー
+  if (r.days > 0 && r.lastPayMonth && r.lastPayMonth <= C.simMonths) {
+    const xx = padL + slot * r.lastPayMonth + slot / 2;
+    g += `<line x1="${xx}" y1="${padT}" x2="${xx}" y2="${padT + plotH}" stroke="var(--baseline)" stroke-width="1"/>`;
+    g += `<text x="${xx + 5}" y="${padT + 13}" font-size="${mobile ? 11 : 12}" fill="var(--muted)">手当終了</text>`;
+  }
+
+  // バー（角丸はデータ側のみ）
+  let bars = "";
+  data.forEach((d, i) => {
+    const cx = padL + slot * i + (slot - barW) / 2;
+    const positive = d.bal >= 0;
+    const y0 = y(0), yv = y(d.bal);
+    const top = positive ? yv : y0;
+    const h = Math.max(1.5, Math.abs(yv - y0));
+    const rad = Math.min(4, h / 2);
+    const color = positive ? "var(--bar)" : "var(--critical)";
+    const path = positive
+      ? `M${cx},${top + h} L${cx},${top + rad} Q${cx},${top} ${cx + rad},${top} L${cx + barW - rad},${top} Q${cx + barW},${top} ${cx + barW},${top + rad} L${cx + barW},${top + h} Z`
+      : `M${cx},${top} L${cx + barW},${top} L${cx + barW},${top + h - rad} Q${cx + barW},${top + h} ${cx + barW - rad},${top + h} L${cx + rad},${top + h} Q${cx},${top + h} ${cx},${top + h - rad} Z`;
+    bars += `<path d="${path}" fill="${color}"/>`;
+    // ホバー用ヒットエリア
+    bars += `<rect class="hit" data-i="${i}" x="${padL + slot * i}" y="${padT}" width="${slot}" height="${plotH}" fill="transparent"/>`;
+  });
+
+  // X軸ラベル
+  data.forEach((d, i) => {
+    if (i % labelEvery !== 0) return;
+    const xx = padL + slot * i + slot / 2;
+    g += `<text x="${xx}" y="${H - 10}" text-anchor="middle" font-size="${fs}" fill="var(--muted)">${d.m === 0 ? "退職時" : d.m + "ヶ月"}</text>`;
+  });
+
+  $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="退職後24ヶ月の貯金残高の推移グラフ">${g}${bars}</svg>`;
+
+  // ツールチップ
+  const tooltip = $("tooltip"), box = $("chartBox");
+  $("chart").querySelectorAll(".hit").forEach(el => {
+    el.addEventListener("mouseenter", () => {
+      const d = data[+el.dataset.i];
+      tooltip.innerHTML = `<span class="t">${d.m === 0 ? "退職時" : d.m + "ヶ月後"}</span><br>残高 ${man(d.bal)}${
+        d.m > 0 ? `<br>手当 +${man(d.benefit)} ／ 支出 −${man(d.out)}` : ""}`;
+      const rect = el.getBoundingClientRect(), brect = box.getBoundingClientRect();
+      tooltip.style.left = (rect.left - brect.left + rect.width / 2) + "px";
+      tooltip.style.top = (rect.top - brect.top + 8) + "px";
+      tooltip.style.opacity = "1";
+    });
+    el.addEventListener("mouseleave", () => { tooltip.style.opacity = "0"; });
+  });
+}
+
+/* ===== イベント ===== */
+document.querySelectorAll("#reasonGroup label").forEach(l => {
+  l.addEventListener("click", () => {
+    document.querySelectorAll("#reasonGroup label").forEach(x => x.classList.remove("on"));
+    l.classList.add("on");
+    l.querySelector("input").checked = true;
+    render();
+  });
+});
+document.querySelectorAll("#form input[type=number], #form select").forEach(el => {
+  el.addEventListener("input", () => { if ($("results").style.display === "block") render(); });
+});
+$("calcBtn").addEventListener("click", () => {
+  render();
+  $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+</script>
+</body>
+</html>
