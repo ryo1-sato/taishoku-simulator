@@ -62,6 +62,13 @@ article strong{color:var(--ink);}
 article ul,article ol{margin:10px 0 10px 24px;}
 article li{font-size:14px;color:var(--ink-2);margin:6px 0;}
 
+/* 要点ボックス（結論ファースト・AI引用対応） */
+.keypoints{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:16px 20px;margin:18px 0;}
+.keypoints .k-title{font-size:13px;font-weight:700;color:var(--accent-strong);margin-bottom:6px;}
+.keypoints ul{margin:0 0 0 20px;}
+.keypoints li{font-size:14px;color:var(--ink);margin:5px 0;font-weight:600;}
+@media(min-width:720px){.keypoints li{font-size:14.5px;}}
+
 /* 目次 */
 .toc{background:#f7f9fc;border:1px solid var(--grid);border-radius:12px;padding:16px 20px;margin:20px 0;}
 .toc .toc-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
